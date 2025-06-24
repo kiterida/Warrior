@@ -11,6 +11,7 @@
 #include "Components/Input/WarrirorEnhancedInputComponent.h"
 #include "WarriorGameplayTags.h"
 #include "AbilitySystem/WarriorAbilitySystemComponent.h"
+#include "DataAssets/StartupData/DataAsset_HeroStartupData.h"
 
 #include "WarriorDebugHelper.h"
 
@@ -41,6 +42,14 @@ AWarriorHeroCharacter::AWarriorHeroCharacter()
 void AWarriorHeroCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
+
+	if (!CharacterStartupData.IsNull())
+	{
+		if (UDataAsset_StartupDatabase* LoadedData = CharacterStartupData.LoadSynchronous())
+		{
+			LoadedData->GiveToAbilitySystemComponent(WarriorAbilitySystemComponent);
+		}
+	}
 
 	if (WarriorAbilitySystemComponent && WarriorAttributeSet)
 	{
